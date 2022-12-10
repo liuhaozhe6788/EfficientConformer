@@ -136,7 +136,7 @@ class Transducer(Model):
             for key, value in self.state_dict().items():
                 print("{:<64} {:<16} mean {:<16.4f} std {:<16.4f}".format(key, str(tuple(value.size())), value.float().mean(), value.float().std()))
 
-    def gready_search_decoding(self, x, x_len):
+    def greedy_search_decoding(self, x, x_len):
 
         # Predictions String List
         preds = []

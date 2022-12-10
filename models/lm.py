@@ -80,6 +80,6 @@ class LanguageModel(Model):
 
         return logits
 
-    def gready_search_decoding(self, x, x_len):
+    def greedy_search_decoding(self, x, x_len):
         
         return [""]

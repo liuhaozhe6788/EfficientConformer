@@ -87,7 +87,7 @@ class ModelCTC(Model):
         if self.rank == 0:
             print("Model encoder loaded at step {} from {}".format(checkpoint["model_step"], path))
 
-    def gready_search_decoding(self, x, x_len):
+    def greedy_search_decoding(self, x, x_len):
 
         # Forward Encoder (B, Taud) -> (B, T, Denc)
         logits, logits_len = self.encoder(x, x_len)[:2]

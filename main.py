@@ -135,14 +135,14 @@ def main(rank, args):
     elif args.mode.split("-")[0] == "validation" or args.mode.split("-")[0] == "test":
 
         # Gready Search Evaluation
-        if args.gready or model.beam_size is None:
+        if args.greedy or model.beam_size is None:
 
             if args.rank == 0:
-                print("Gready Search Evaluation")
+                print("Greedy Search Evaluation")
             wer, _, _, _ = model.evaluate(dataset_val, eval_steps=args.val_steps, verbose=args.verbose_val, beam_size=1, eval_loss=args.eval_loss)
             
             if args.rank == 0:
-                print("Geady Search WER : {:.2f}%".format(100 * wer))
+                print("Greedy Search WER : {:.2f}%".format(100 * wer))
         
         # Beam Search Evaluation
         else:
@@ -182,7 +182,7 @@ if __name__ == "__main__":
 
     # Args
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--config_file",          type=str,   default="configs/EfficientConformerCTCSmall.json",  help="Json configuration file containing model hyperparameters")
+    parser.add_argument("-c", "--config_file",          type=str,   default="configs/EfficientConformerCTCLarge.json",  help="Json configuration file containing model hyperparameters")
     parser.add_argument("-m", "--mode",                 type=str,   default="training",                                 help="Mode : training, validation-clean, test-clean, eval_time-dev-clean, ...")
     parser.add_argument("-d", "--distributed",          action="store_true",                                            help="Distributed data parallelization")
     parser.add_argument("-i", "--initial_epoch",        type=str,   default=None,                                       help="Load model from checkpoint")
@@ -205,7 +205,7 @@ if __name__ == "__main__":
     parser.add_argument("--parallel",                   action="store_true",                                            help="Parallelize model using data parallelization")
     parser.add_argument("--rnnt_max_consec_dec_steps",  type=int,   default=None,                                       help="Number of maximum consecutive transducer decoder steps during inference")
     parser.add_argument("--eval_loss",                  action="store_true",                                            help="Compute evaluation loss during evaluation")
-    parser.add_argument("--gready",                     action="store_true",                                            help="Proceed to a gready search evaluation")
+    parser.add_argument("--greedy",                     action="store_true",                                            help="Proceed to a gready search evaluation")
     parser.add_argument("--saving_period",              type=int,   default=1,                                          help="Model saving every 'n' epochs")
     parser.add_argument("--val_period",                 type=int,   default=1,                                          help="Model validation every 'n' epochs")
     parser.add_argument("--profiler",                   action="store_true",                                            help="Enable eval time profiler")

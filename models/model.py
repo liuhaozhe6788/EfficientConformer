@@ -16,7 +16,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 
 # Sentencepiece
 import sentencepiece as spm
@@ -182,19 +182,20 @@ class Model(nn.Module):
         acc_step = 0
         self.optimizer.zero_grad()
 
-        # Callbacks
-        if self.rank == 0 and callback_path is not None:
+        # # Callbacks
+        # if self.rank == 0 and callback_path is not None:
 
-             # Create Callbacks
-            if not os.path.isdir(callback_path):
-                os.makedirs(callback_path)
+        #      # Create Callbacks
+        #     if not os.path.isdir(callback_path):
+        #         os.makedirs(callback_path)
 
-            # Create Writer
-            writer = SummaryWriter(callback_path + "logs")
+        #     # Create Writer
+        #     writer = SummaryWriter(callback_path + "logs")
 
-        else:
+        # else:
 
-            writer = None
+        #     writer = None
+        writer=None
 
         # Sample Synaptic Noise
         if self.vn_start_step is not None:
@@ -416,13 +417,13 @@ class Model(nn.Module):
                 if beam_size > 1:
                     outputs_pred = self.beam_search_decoding(batch[0], batch[2], beam_size)
                 else:
-                    outputs_pred = self.gready_search_decoding(batch[0], batch[2])
+                    outputs_pred = self.greedy_search_decoding(batch[0], batch[2])
 
             # Sequence Truth
             outputs_true = self.tokenizer.decode(batch[1].tolist())
 
             # Compute Batch wer and Update total wer
-            batch_wer = jiwer.wer(outputs_true, outputs_pred, standardize=True)
+            batch_wer = jiwer.wer(outputs_true, outputs_pred)
             total_wer += batch_wer
 
             # Update String lists
@@ -480,7 +481,7 @@ class Model(nn.Module):
         if total_wer / (eval_steps if eval_steps is not None else dataset_eval.__len__()) > 1:
             wer = 1
         else:
-            wer = jiwer.wer(speech_true, speech_pred, standardize=True)
+            wer = jiwer.wer(speech_true, speech_pred)
 
         # Compute loss
         if eval_loss:

@@ -17,9 +17,9 @@
     
     "tokenizer_params":
     {
-        "tokenizer_path": "datasets/LibriSpeech/LibriSpeech_bpe_1000.model",
+        "tokenizer_path": "datasets/LibriSpeech/LibriSpeech_bpe_256.model",
         "vocab_type": "bpe",
-        "vocab_size": 1000
+        "vocab_size": 256
     },
 
     "training_params":

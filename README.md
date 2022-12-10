@@ -7,7 +7,6 @@ Official implementation of the Efficient Conformer, progressively downsampled Co
 ## Efficient Conformer Encoder
 Inspired from previous works done in Automatic Speech Recognition and Computer Vision, the Efficient Conformer encoder is composed of three encoder stages where each stage comprises a number of Conformer blocks using grouped attention. The encoded sequence is progressively downsampled and projected to wider feature dimensions, lowering  the amount of computation while achieving better performance. Grouped multi-head attention reduce attention complexity by grouping neighbouring time elements along the feature dimension before applying scaled dot-product attention.
 
-<img src="media/EfficientConformer.jpg" width="50%"/>
 
 ## Installation
 Clone GitHub repository and set up environment
@@ -83,7 +82,6 @@ python main.py --config_file configs/config_file.json --initial_epoch epoch/name
 tensorboard --logdir callback_path
 ```
 
-<img src="media/logs.jpg"/>
 
 ## LibriSpeech Performance
 
