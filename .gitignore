@@ -6,3 +6,4 @@ env/*
 datasets/*
 callbacks/*
 *.wav
+in_audios/*

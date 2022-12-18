@@ -124,8 +124,11 @@ class ConformerEncoder(nn.Module):
 
         # Conformer Blocks
         attentions = []
-        for block in self.blocks:
+        for i, block in enumerate(self.blocks):
+            print(x.shape)
+            print(i+1, block)
             x, attention, hidden = block(x, mask)
+            print(x.shape)
             attentions.append(attention)
 
             # Strided Block

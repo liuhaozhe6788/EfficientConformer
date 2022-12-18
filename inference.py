@@ -13,6 +13,8 @@ from pydub import AudioSegment
 from pydub.silence import split_on_silence
 import noisereduce as nr 
 import soundfile as sf
+import time
+
 
 if __name__ == "__main__":
   # Args
@@ -47,6 +49,7 @@ if __name__ == "__main__":
     message = "Reference voice: enter an audio filepath of a voice (mp3, " \
                 "wav, m4a, flac, ...):\n"
     audio_file = input(message)
+    start_time= time.time() # set the time at which inference started
     audio, sr = librosa.load(audio_file)
 
     # # Plot audio
@@ -59,15 +62,17 @@ if __name__ == "__main__":
     #   audio = torch.unsqueeze(audio[1], 0)
 
 
-    audio = nr.reduce_noise(audio, sr, prop_decrease=0.7)
+    audio = nr.reduce_noise(audio, sr, prop_decrease=0.7)  # reduce input noise
     path_, name = os.path.split(audio_file)
     name, suffix = os.path.splitext(name)
     out_file = os.path.join(path_, name + "_nr.wav")  
     sf.write(out_file, audio.astype(np.float32), sr)
 
+    # split the input audio by silence
     sound = AudioSegment.from_mp3(out_file)
     os.remove(out_file)
-    chunks = split_on_silence(sound, min_silence_len=1500, silence_thresh=-50, keep_silence=500)
+    chunks = split_on_silence(sound, min_silence_len=15000, silence_thresh=-50, keep_silence=500)
+    
     chunk_paths = []
     predictions = []
     for i, chunk in enumerate(chunks):
@@ -78,6 +83,7 @@ if __name__ == "__main__":
       os.remove(chunk_path)
       chunk_audio = np.reshape(chunk_audio, (1, len(chunk_audio)))
       chunk_audio = torch.from_numpy(chunk_audio)
+      
       # Predict sentence
       if args.greedy:
         prediction = model.greedy_search_decoding(chunk_audio.to(device), x_len=torch.tensor([len(chunk_audio[0])], device=device))[0]
@@ -86,6 +92,9 @@ if __name__ == "__main__":
       predictions.append(prediction)
 
     out_text = ' '.join(predictions)
+    stop_time=time.time()
+    duration =stop_time - start_time
+    print(f"Inference time is {duration}s")
     print("model output text:", out_text, '\n')
     for i in range(100):
       print('*', end='')
